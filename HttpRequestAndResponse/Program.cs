@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Primitives;
 using System.Security.Cryptography;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
@@ -25,7 +27,16 @@ app.Run(async(HttpContext context) =>
         string id = context.Request.Query["id"];    
         await context.Response.WriteAsync($"<p>{id}</p>");
     }
+    // use parsing to convert string query format to dictionary format
+    // reading body from HTTP POST method
+    // create a reader
+    StreamReader reader = new StreamReader(context.Request.Body);
+    string body = await reader.ReadToEndAsync();
 
+    Dictionary<string, StringValues> queryDict =
+    Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(body);
+
+    
 
 });
 
